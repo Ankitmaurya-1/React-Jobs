@@ -1,14 +1,8 @@
-import React from "react";
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useParams, useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
-function EditJobPage({ updateJobSumbit }) {
-  const navigate = useNavigate();
-  const { id } = useParams();
-
+const EditJobPage = ({ updateJobSubmit }) => {
   const job = useLoaderData();
   const [title, setTitle] = useState(job.title);
   const [type, setType] = useState(job.type);
@@ -22,7 +16,10 @@ function EditJobPage({ updateJobSumbit }) {
   const [contactEmail, setContactEmail] = useState(job.company.contactEmail);
   const [contactPhone, setContactPhone] = useState(job.company.contactPhone);
 
-  const submitForm = (e) => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const submitForm = (e, updateJobSubmit) => {
     e.preventDefault();
 
     const updatedJob = {
@@ -39,7 +36,8 @@ function EditJobPage({ updateJobSumbit }) {
         contactPhone,
       },
     };
-    updateJobSumbit(updatedJob);
+
+    updateJobSubmit(id, updatedJob);
 
     toast.success("Job Updated Successfully");
 
@@ -50,7 +48,7 @@ function EditJobPage({ updateJobSumbit }) {
     <section className="bg-indigo-50">
       <div className="container m-auto max-w-2xl py-24">
         <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
-          <form onSubmit={submitForm}>
+          <form onSubmit={(e) => submitForm(e, updateJobSubmit)}>
             <h2 className="text-3xl text-center font-semibold mb-6">
               Update Job
             </h2>
@@ -205,7 +203,7 @@ function EditJobPage({ updateJobSumbit }) {
                 id="contact_email"
                 name="contact_email"
                 className="border rounded w-full py-2 px-3"
-                placeholder="Email address"
+                placeholder="Email address for applicants"
                 required
                 value={contactEmail}
                 onChange={(e) => setContactEmail(e.target.value)}
@@ -223,7 +221,7 @@ function EditJobPage({ updateJobSumbit }) {
                 id="contact_phone"
                 name="contact_phone"
                 className="border rounded w-full py-2 px-3"
-                placeholder="Optional phone "
+                placeholder="Optional phone for applicants"
                 value={contactPhone}
                 onChange={(e) => setContactPhone(e.target.value)}
               />
@@ -242,6 +240,5 @@ function EditJobPage({ updateJobSumbit }) {
       </div>
     </section>
   );
-}
-
+};
 export default EditJobPage;
